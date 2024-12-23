@@ -1,0 +1,87 @@
+body {
+  background: var(--tg-theme-secondary-bg-color, white);
+  padding: 0;
+  margin: 0;
+}
+
+* {
+  user-select: none;
+}
+
+.outerContainer {
+  position: relative;
+  width: 100vw;
+  height: 90vh;
+}
+
+/* Стили контейнера */
+.container {
+  position: relative;
+  /* background-color: #f0f0f0; */
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90%;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* Стили для всплывающих чисел */
+.floating-number {
+  position: absolute;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff5722;
+  animation: float-up 1.5s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Анимация для всплытия чисел */
+@keyframes float-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
+.iconHolderHolder{
+  display: flex;
+  /* align-items: stretch; */
+  justify-content: space-around;
+}
+
+.iconHolder{
+  border: 20 solid #ff5722 ;
+}
+
+.icon{
+  object-fit: scale-down;
+  height: 40px;
+  width: 40px;
+}
+
+.center-image {
+  object-fit: cover;
+  cursor: pointer;
+  z-index: 1;
+  pointer-events: none;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Анимация увеличения */
+.center-image.clicked {
+  transform: scale(1.2);
+}
