@@ -5,6 +5,7 @@ import { initData, useSignal } from "@telegram-apps/sdk-react";
 import volgaImage from './volga.png';
 import volgaSmallImage from './volga-small.png';
 import energyImage from './energy.webp';
+import { Base64 } from "js-base64";
 
 interface FloatingNumber {
     id: number;
@@ -28,56 +29,38 @@ export const ClickerSubpage: FC = () => {
     const [energy, setEnergy] = useState(maxEnergy);
     const [clicks, setClicks] = useState(0);
 
-    const [clickPool, setClickPool] = useState(0);
+    const clickPool = useRef(0);
 
     const initDataRaw = useSignal(initData.raw);
-    let initDataSnapshot = Object.fromEntries(new URLSearchParams(initDataRaw))
-    initDataSnapshot.user = JSON.parse(initDataSnapshot.user)
+    const initDataSnapshot = Base64.encode(JSON.stringify(Object.fromEntries(new URLSearchParams(initDataRaw))))
     useEffect(() => {
-        const getData = () => fetch(controllerURL,
-            {
-                method: "GET",
-                headers: { "Authorization": "tma " + JSON.stringify(initDataSnapshot) }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return Promise.reject(response);
-                }
-                return response.json();
-            })
-            .then(data => {
-                setClicks(data.clicks)
-                setEnergy(data.energy)
-            })
         const sendData = () => {
-            const collectedClicks = clickPool
-            if (collectedClicks > 0) {
-                setClickPool(0)
-                fetch(controllerURL,
-                    {
-                        method: "POST",
-                        headers: { "Authorization": "tma " + initDataRaw },
-                        body: JSON.stringify({ "clicks": collectedClicks })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            return Promise.reject(response);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        setClicks(data.clicks)
-                        setEnergy(data.energy)
-                    })
-            }
+            const collectedClicks = clickPool.current + 0
+            clickPool.current -= collectedClicks
+            const body = { "clicks": collectedClicks }
+            console.log(JSON.stringify(body))
+            return fetch(controllerURL,
+                {
+                    method: "POST",
+                    headers: { "Authorization": "tma " + initDataSnapshot, "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return Promise.reject(response);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    setClicks(data.clicks)
+                    setEnergy(data.energy)
+                })
         }
 
-        getData()
+        const runSendData = () => sendData().finally(() => { setTimeout(runSendData, 2000) })
+        runSendData()
 
-        setInterval(getData, 500)
-        setInterval(sendData, 100)
-
-        return sendData
+        return () => { sendData(); }
     }, [])
 
 
@@ -110,7 +93,7 @@ export const ClickerSubpage: FC = () => {
         if (energy > 0) {
             setEnergy(energy - 1)
             setClicks(clicks + 1)
-            setClickPool(clickPool + 1)
+            clickPool.current += 1
         }
     };
     return <List className="outerContainer">

@@ -12,6 +12,7 @@ body {
   position: relative;
   width: 100vw;
   height: 80vh;
+  overflow-y: auto;
 }
 
 /* Стили контейнера */
