@@ -31,11 +31,13 @@ export const ClickerSubpage: FC = () => {
     const [clickPool, setClickPool] = useState(0);
 
     const initDataRaw = useSignal(initData.raw);
+    let initDataSnapshot = Object.fromEntries(new URLSearchParams(initDataRaw))
+    initDataSnapshot.user = JSON.parse(initDataSnapshot.user)
     useEffect(() => {
         const getData = () => fetch(controllerURL,
             {
                 method: "GET",
-                headers: { "Authorization": "tma " + initDataRaw }
+                headers: { "Authorization": "tma " + JSON.stringify(initDataSnapshot) }
             })
             .then(response => {
                 if (!response.ok) {

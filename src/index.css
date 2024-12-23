@@ -11,7 +11,7 @@ body {
 .outerContainer {
   position: relative;
   width: 100vw;
-  height: 90vh;
+  height: 80vh;
 }
 
 /* Стили контейнера */
@@ -78,6 +78,7 @@ body {
   cursor: pointer;
   z-index: 1;
   pointer-events: none;
+  width: 60%;
   transition: transform 0.3s ease-in-out;
 }
 

@@ -1,4 +1,4 @@
-import { Section, Cell, TabsList } from '@telegram-apps/telegram-ui';
+import { Section, TabsList } from '@telegram-apps/telegram-ui';
 import { useState, type FC } from 'react';
 
 import { Page } from '@/components/Page.tsx';
