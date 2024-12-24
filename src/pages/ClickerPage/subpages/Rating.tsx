@@ -38,6 +38,6 @@ export const RatingSubpage: FC = () => {
 
 
     return <List className="outerContainer">
-        {ratingEntries.map((e, i) => (<Cell before={<Cell>#{i + 1}</Cell>} after={<Cell>{e.clicks}</Cell>}>{e.username}</Cell>))}
+        {ratingEntries.map((e, i) => (<Cell before={<Cell>#{i + 1}</Cell>} /*after={<Cell>{e.clicks}</Cell>}*/>{e.username}</Cell>))}
     </List>
 }
