@@ -17,8 +17,6 @@ const radius = 50
 
 const controllerURL = "/api/click"
 
-const maxEnergy = 2500
-
 export const ClickerSubpage: FC = () => {
     const [numbers, setNumbers] = useState<FloatingNumber[]>([]);
     const [newNumberId, setNewNumberId] = useState(0);
@@ -26,7 +24,8 @@ export const ClickerSubpage: FC = () => {
     const imageRef = useRef<HTMLImageElement | null>(null);
 
 
-    const [energy, setEnergy] = useState(maxEnergy);
+    const [energy, setEnergy] = useState(0);
+    const [maxEnergy, setMaxEnergy] = useState(0);
     const [clicks, setClicks] = useState(0);
 
     const clickPool = useRef(0);
@@ -54,6 +53,7 @@ export const ClickerSubpage: FC = () => {
                 .then(data => {
                     setClicks(data.clicks)
                     setEnergy(data.energy)
+                    setMaxEnergy(data.maxEnergy)
                 })
         }
 
